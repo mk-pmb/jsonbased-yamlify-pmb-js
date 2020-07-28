@@ -4,3 +4,5 @@ import 'p-fatal';
 import 'usnam-pmb';
 
 import './foobar';
+import './trPrim';
+import './undef';

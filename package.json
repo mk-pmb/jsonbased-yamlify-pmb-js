@@ -1,5 +1,5 @@
 { "name": "jsonbased-yamlify-pmb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple, feature-incomplete YAML writer",
   "keywords": ["yaml"],
 
@@ -23,12 +23,14 @@
   "directories": { "test": "test" },
 
   "dependencies": {
+    "getown": "^1.0.0",
     "univeil": "^0.1.17"
   },
   "devDependencies": {
     "equal-pmb": "^0.1.20",
     "nodemjs": "^0.1.8",
     "p-fatal": "^0.1.3",
+    "p-tape": "^4.0.1",
     "usnam-pmb": "^0.2.4"
   },
 

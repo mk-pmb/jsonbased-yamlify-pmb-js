@@ -1,79 +1,71 @@
 // -*- coding: utf-8, tab-width: 2 -*-
 
-import eq from 'equal-pmb';
-
-import yamlify from '..';
-
-function cmp(x, l) { eq.lines(yamlify(x), l.concat('')); }
-
-cmp([1, 'two', 3.1415], [
-  '  - 1',
-  '  - "two"',
-  '  - 3.1415',
-]);
+import test from './util/cmpTest';
 
 const foo = ['Foo', ['fOo', 'foO'], [], 'fOO', ['FOO']];
 const bar = [['BAR'], 'bAR', [], ['baR', 'bAr'], 'Bar'];
 
-cmp([foo, bar, []], [
-  '  -   - "Foo"',
-  '      -   - "fOo"',
-  '          - "foO"',
-  '      - []',
-  '      - "fOO"',
-  '      -   - "FOO"',
-  '  -   -   - "BAR"',
-  '      - "bAR"',
-  '      - []',
-  '      -   - "baR"',
-  '          - "bAr"',
-  '      - "Bar"',
-  '  - []',
-]);
 
-cmp({ foo, bar, qux: [] }, [
-  'foo:',
-  '  - "Foo"',
-  '  -   - "fOo"',
-  '      - "foO"',
-  '  - []',
-  '  - "fOO"',
-  '  -   - "FOO"',
-  'bar:',
-  '  -   - "BAR"',
-  '  - "bAR"',
-  '  - []',
-  '  -   - "baR"',
-  '      - "bAr"',
-  '  - "Bar"',
-  'qux: []',
-]);
+test('foo bar list', {
+  input: [foo, bar, []],
+  want: [
+    '  -   - "Foo"',
+    '      -   - "fOo"',
+    '          - "foO"',
+    '      - []',
+    '      - "fOO"',
+    '      -   - "FOO"',
+    '  -   -   - "BAR"',
+    '      - "bAR"',
+    '      - []',
+    '      -   - "baR"',
+    '          - "bAr"',
+    '      - "Bar"',
+    '  - []',
+  ],
+});
 
 
-cmp({ foo: [...foo, { bar, qux: {} }], baz: {} }, [
-  'foo:',
-  '  - "Foo"',
-  '  -   - "fOo"',
-  '      - "foO"',
-  '  - []',
-  '  - "fOO"',
-  '  -   - "FOO"',
-  '  - bar:',
-  '      -   - "BAR"',
-  '      - "bAR"',
-  '      - []',
-  '      -   - "baR"',
-  '          - "bAr"',
-  '      - "Bar"',
-  '    qux: {}',
-  'baz: {}',
-]);
+test('foo bar dict of lists', {
+  input: { foo, bar, qux: [] },
+  want: [
+    'foo:',
+    '  - "Foo"',
+    '  -   - "fOo"',
+    '      - "foO"',
+    '  - []',
+    '  - "fOO"',
+    '  -   - "FOO"',
+    'bar:',
+    '  -   - "BAR"',
+    '  - "bAR"',
+    '  - []',
+    '  -   - "baR"',
+    '      - "bAr"',
+    '  - "Bar"',
+    'qux: []',
+  ],
+});
 
 
-
-
-
-
-
-
-console.info('+OK qdYaml.nestedLists tests passed.');
+test('foo bar dict with nested dict', {
+  input: { foo: [...foo, { bar, qux: {} }], baz: {} },
+  want: [
+    'foo:',
+    '  - "Foo"',
+    '  -   - "fOo"',
+    '      - "foO"',
+    '  - []',
+    '  - "fOO"',
+    '  -   - "FOO"',
+    '  - bar:',
+    '      -   - "BAR"',
+    '      - "bAR"',
+    '      - []',
+    '      -   - "baR"',
+    '          - "bAr"',
+    '      - "Bar"',
+    '    qux: {}',
+    'baz: {}',
+  ],
+});
