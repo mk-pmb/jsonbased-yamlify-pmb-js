@@ -1,0 +1,37 @@
+{ "name": "jsonbased-yamlify-pmb",
+  "version": "0.1.0",
+  "description": "A simple, feature-incomplete YAML writer",
+  "keywords": ["yaml"],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/jsonbased-yamlify-pmb-js/#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/jsonbased-yamlify-pmb-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/jsonbased-yamlify-pmb-js/issues"
+  },
+  "contributors": [],
+
+  "config": { "for_details": "see npm-config2env-datatypes-demo" },
+
+  "private": false, "license": "ISC",
+
+  "main": "yamlify.mjs",
+  "scripts": { "test": "nodemjs test/all.mjs" },
+  "directories": { "test": "test" },
+
+  "dependencies": {
+    "univeil": "^0.1.17"
+  },
+  "devDependencies": {
+    "equal-pmb": "^0.1.20",
+    "nodemjs": "^0.1.8",
+    "p-fatal": "^0.1.3",
+    "usnam-pmb": "^0.2.4"
+  },
+
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
