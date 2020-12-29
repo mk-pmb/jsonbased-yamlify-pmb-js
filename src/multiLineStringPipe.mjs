@@ -23,7 +23,7 @@ Object.assign(EX, {
   optimizeString(origLn, opt) {
     const minNl = (+opt.multiLineStringPipe || 0);
     if (!minNl) { return origLn; }
-    const ind = /^\s*/.exec(origLn)[0];
+    const ind = /^\s*(?:\-\s+|)/.exec(origLn)[0];
     let val = origLn.slice(ind.length);
     let key = (/: (?=")/.exec(val) || '');
     if (key) {
@@ -53,7 +53,8 @@ Object.assign(EX, {
 
     val = val.slice(0, -1).split(/\n/);
     if (val.length < minNl) { return origLn; }
-    val = val.join('\n').replace(/(^|\n+)(?!\n)/g, '$1  ' + ind);
+    val = val.join('\n').replace(/(^|\n+)(?!\n)/g,
+      '$1  ' + ind.replace(/\-/, ' '));
     val = ind + key + '|\n' + val;
     return val;
   },

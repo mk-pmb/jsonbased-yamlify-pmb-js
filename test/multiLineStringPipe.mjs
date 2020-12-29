@@ -8,68 +8,78 @@ import multiLineStringPipe from '../src/multiLineStringPipe';
 import yamlify from '..';
 
 function chk(descr, input, wantLines) {
+  if (!Array.isArray(wantLines)) { return chk(descr, input, [wantLines]); }
+  function wr(subDescr, wrapped, prefix, indentWidth) {
+    const indentStr = '                '.slice(0, +indentWidth || 0);
+    const yaml = multiLineStringPipe(yamlify(wrapped));
+    equal.named(descr + ', ' + subDescr, () => {
+      equal.named('decodes as expected', () => {
+        equal(jsYaml.safeLoad(yaml), wrapped);
+      });
+      equal.named('encodes as expected', () => {
+        equal.lines(yaml.replace(/\n$/, '').replace(/\\/g, '¦'), [
+          prefix + wantLines[0],
+          ...wantLines.slice(1).map(s => (s && (indentStr + s))),
+        ]);
+      });
+    });
+  }
   pTapeTest(descr, function wrapTest(t) {
     t.plan(1);
-    const yaml = multiLineStringPipe(yamlify(input));
-    equal.named('encodes as expected', () => {
-      equal.lines(yaml.replace(/\n$/, '').replace(/\\/g, '¦'), wantLines);
-    });
-    equal.named('decodes as expected', () => {
-      equal(jsYaml.safeLoad(yaml), input);
-    });
+    wr('unwrapped', input, '', 0);
+    wr('as list item', [input], '  - ', 4);
+    wr('as map entry', { key: input }, 'key: ', 0);
     t.ok(true);
   });
 }
 
-chk('empty string',
-  { x: '' },
-  'x: ""');
+chk('empty string', '', '""');
 
 chk('no trailing newline',
-  { x: '\\\\\n1\\n2\r\n3\n4n5\n6' },
-  'x: "¦¦¦¦¦n1¦¦n2¦r¦n3¦n4n5¦n6"');
+  '\\\\\n1\\n2\r\n3\n4n5\n6',
+  '"¦¦¦¦¦n1¦¦n2¦r¦n3¦n4n5¦n6"');
 
 chk('CR',
-  { x: '\\\\\n1\\n2\r\n3\n4n5\n' },
-  'x: "¦¦¦¦¦n1¦¦n2¦r¦n3¦n4n5¦n"');
+  '\\\\\n1\\n2\r\n3\n4n5\n',
+  '"¦¦¦¦¦n1¦¦n2¦r¦n3¦n4n5¦n"');
 
-chk('Acceptable', { x: '\\\\\n1\\n2\n3\n4n5\n' }, [
-  'x: |',
+chk('Acceptable', '\\\\\n1\\n2\n3\n4n5\n', [
+  '|',
   '  ¦¦',
   '  1¦n2',
   '  3',
   '  4n5',
 ]);
 
-chk('blank first line', { x: '\nhello\n\nworld!\n' }, [
-  'x: |',
+chk('blank first line', '\nhello\n\nworld!\n', [
+  '|',
   '',
   '  hello',
   '',
   '  world!',
 ]);
 
-chk('blank line between', { x: 'hello\n\nworld!\n' }, [
-  'x: |',
+chk('blank line between', 'hello\n\nworld!\n', [
+  '|',
   '  hello',
   '',
   '  world!',
 ]);
 
-chk('EOL whitespace', { x: 'hello\n\nworld! \n' }, [
-  'x: |',
+chk('EOL whitespace', 'hello\n\nworld! \n', [
+  '|',
   '  hello',
   '',
   '  world! ',
 ]);
 
 chk('Blank last line',
-  { x: 'hello\n\nworld!\n\n' },
-  'x: "hello¦n¦nworld!¦n¦n"');
+  'hello\n\nworld!\n\n',
+  '"hello¦n¦nworld!¦n¦n"');
 
 chk('Ambiguous indentation',
-  { x: ' hello\n \n world!\n' },
-  'x: " hello¦n ¦n world!¦n"');
+  ' hello\n \n world!\n',
+  '" hello¦n ¦n world!¦n"');
 
 
 
