@@ -30,7 +30,17 @@ Object.assign(EX, {
       key = val.slice(0, key.index) + key[0];
       val = val.slice(key.length);
     }
-    val = JSON.parse(val);
+    try {
+      val = JSON.parse(val);
+    } catch (bad) {
+      if (bad.name === 'SyntaxError') {
+        const msg = `Cannot parse JSON: ${bad} while trying to parse ‹${val}›`;
+        const err = new SyntaxError(msg);
+        err.name = 'JSONParseError';
+        throw err;
+      }
+      throw bad;
+    }
 
     // Unfortunately, we cannot pipe-encode without trailing newline:
     if (!val.endsWith('\n')) { return origLn; }
