@@ -1,5 +1,5 @@
 { "name": "jsonbased-yamlify-pmb",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A simple, feature-incomplete YAML writer",
   "keywords": ["yaml"],
 

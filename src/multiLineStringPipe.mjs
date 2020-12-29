@@ -43,7 +43,9 @@ Object.assign(EX, {
 
     val = val.slice(0, -1).split(/\n/);
     if (val.length < minNl) { return origLn; }
-    return (ind + key + '|\n  ' + val.join('\n' + ind + '  '));
+    val = val.join('\n').replace(/(^|\n+)(?!\n)/g, '$1  ' + ind);
+    val = ind + key + '|\n' + val;
+    return val;
   },
 
 });

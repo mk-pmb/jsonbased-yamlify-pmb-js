@@ -43,23 +43,23 @@ chk('Acceptable', { x: '\\\\\n1\\n2\n3\n4n5\n' }, [
 
 chk('blank first line', { x: '\nhello\n\nworld!\n' }, [
   'x: |',
-  '  ',
+  '',
   '  hello',
-  '  ',
+  '',
   '  world!',
 ]);
 
 chk('blank line between', { x: 'hello\n\nworld!\n' }, [
   'x: |',
   '  hello',
-  '  ',
+  '',
   '  world!',
 ]);
 
 chk('EOL whitespace', { x: 'hello\n\nworld! \n' }, [
   'x: |',
   '  hello',
-  '  ',
+  '',
   '  world! ',
 ]);
 
