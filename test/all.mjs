@@ -4,5 +4,6 @@ import 'p-fatal';
 import 'usnam-pmb';
 
 import './foobar';
+import './multiLineStringPipe';
 import './trPrim';
 import './undef';
