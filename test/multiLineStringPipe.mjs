@@ -2,7 +2,7 @@
 
 import pTapeTest from 'p-tape';
 import equal from 'equal-pmb';
-import jsYaml from 'js-yaml';
+import parseYAML from 'safeload-yaml-pmb';
 
 import multiLineStringPipe from '../src/multiLineStringPipe';
 import yamlify from '..';
@@ -14,7 +14,7 @@ function chk(descr, input, wantLines) {
     const yaml = multiLineStringPipe(yamlify(wrapped));
     equal.named(descr + ', ' + subDescr, () => {
       equal.named('decodes as expected', () => {
-        equal(jsYaml.safeLoad(yaml), wrapped);
+        equal(parseYAML(yaml), wrapped);
       });
       equal.named('encodes as expected', () => {
         equal.lines(yaml.replace(/\n$/, '').replace(/\\/g, '¦'), [
