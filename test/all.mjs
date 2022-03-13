@@ -3,7 +3,7 @@
 import 'p-fatal';
 import 'usnam-pmb';
 
-import './foobar';
-import './multiLineStringPipe';
-import './trPrim';
-import './undef';
+import './foobar.mjs';
+import './multiLineStringPipe.mjs';
+import './trPrim.mjs';
+import './undef.mjs';

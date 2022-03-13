@@ -1,6 +1,6 @@
 // -*- coding: utf-8, tab-width: 2 -*-
 
-import test from './util/cmpTest';
+import test from './util/cmpTest.mjs';
 
 const foo = ['Foo', ['fOo', 'foO'], [], 'fOO', ['FOO']];
 const bar = [['BAR'], 'bAR', [], ['baR', 'bAr'], 'Bar'];

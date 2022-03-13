@@ -2,7 +2,7 @@
 
 import eq from 'equal-pmb';
 
-import yamlify from '../..';
+import yamlify from '../../src/yamlify.mjs';
 
 
 function cmp(how, guess) {

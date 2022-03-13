@@ -2,7 +2,7 @@
 
 import pTapeTest from 'p-tape';
 
-import cmp from './cmp';
+import cmp from './cmp.mjs';
 
 function test(name, func, count) {
   if (!func.call) { return test(name, wrCmp => wrCmp(func)); }

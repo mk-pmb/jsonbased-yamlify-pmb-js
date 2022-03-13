@@ -4,7 +4,7 @@ import pTapeTest from 'p-tape';
 import equal from 'equal-pmb';
 import parseYAML from 'safeload-yaml-pmb';
 
-import multiLineStringPipe from '../src/multiLineStringPipe';
+import multiLineStringPipe from '../src/multiLineStringPipe.mjs';
 import yamlify from '..';
 
 function chk(descr, input, wantLines) {
