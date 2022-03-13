@@ -1,19 +1,22 @@
 // -*- coding: utf-8, tab-width: 2 -*-
 
-import test from './util/cmpTest.mjs';
+import test from 'p-tape';
+
+import cmp from './util/cmp.mjs';
 
 const cannot = /^TypeError: Cannot yamlify /;
 
-test('just undef', (cmp) => {
+test('just undef', (t) => {
+  t.plan(2);
   const input = undefined;
-  cmp({ input }, cannot);
-
+  cmp(t, { input }, cannot);
   const opt = { undef: 'ø' };
-  cmp({ input, opt }, 'ø\n');
-}, 2);
+  cmp(t, { input, opt }, 'ø\n');
+});
 
 
-test('list and dict with undef', (cmp) => {
+test('list and dict with undef', (t) => {
+  t.plan(3);
   const input = [
     true,
     undefined,
@@ -22,10 +25,10 @@ test('list and dict with undef', (cmp) => {
     { foo: true, bar: false, qux: undefined },
   ];
 
-  cmp({ input }, cannot);
+  cmp(t, { input }, cannot);
 
   const opt = { undef: 'ø' };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     '  - yes',
     '  - ø',
     '  - null',
@@ -35,7 +38,7 @@ test('list and dict with undef', (cmp) => {
   ]);
 
   opt.dictUndef = '(-)';
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     '  - yes',
     '  - ø',
     '  - null',
@@ -44,4 +47,4 @@ test('list and dict with undef', (cmp) => {
     '    bar: no',
     '    qux: (-)',
   ]);
-}, 3);
+});

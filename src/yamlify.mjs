@@ -14,6 +14,18 @@ function cannotUndef() {
   throw new TypeError('Cannot yamlify undefined as a primitive value.');
 }
 
+function makeRequoter(q) {
+  if (q === '"') { return String; }
+  function requote(j) {
+    if (typeof j !== 'string') { return requote(String(j)); }
+    if (!j.startsWith('"')) { return j; }
+    if (j.includes('\\')) { return j; }
+    if (q && j.includes(q)) { return j; }
+    return q + j.slice(1, -1) + q;
+  };
+  return requote;
+}
+
 function cfg(opt) {
   if (!opt) { return cfg(true); }
   const {
@@ -26,6 +38,8 @@ function cfg(opt) {
   };
   if (trPrim.undefined === undefined) { trPrim.undefined = cannotUndef; }
 
+  const requote = makeRequoter(getOwn(opt, 'strQuotMark', "'") || '');
+
   function f(x, ind, brk) {
     if (!isObj(x)) { return f.prim(x); }
     return (Array.isArray(x) ? f.list : f.dict)(brk, ind, x);
@@ -36,7 +50,7 @@ function cfg(opt) {
     let t = getOwn(trPrim, p, p);
     if (t && t.call) { t = t.call(f, x); }
     // console.error({ trPrim, p }, (t === p) ? '' : { t });
-    return String(t) + '\n';
+    return requote(t) + '\n';
   };
 
   f.list = function itemize(brk, ind, list) {
@@ -48,7 +62,7 @@ function cfg(opt) {
 
   function dictItem(k, v, ind) {
     const m = dictKeyRgx.exec(k);
-    const t = ind + ((m && (m[0] === k)) ? k : jsonify(k)) + ': ';
+    const t = ind + ((m && (m[0] === k)) ? k : requote(jsonify(k))) + ': ';
     if (v === undefined) {
       if (dictUndef === undefined) { return ''; }
       return t + dictUndef + '\n';

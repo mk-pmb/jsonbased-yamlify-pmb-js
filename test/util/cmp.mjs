@@ -3,16 +3,18 @@
 import eq from 'equal-pmb';
 
 import yamlify from '../../src/yamlify.mjs';
+import shortTrace from './shortTrace.mjs';
 
 
-function cmp(how, guess) {
-  if (guess) {
-    const opt = (guess instanceof RegExp ? 'fails' : 'want');
-    return cmp({ ...how, [opt]: guess });
+function cmp(t, how, guessExpectation) {
+  if (guessExpectation) {
+    const opt = (guessExpectation instanceof RegExp ? 'fails' : 'want');
+    return cmp(t, { ...how, [opt]: guessExpectation });
   }
-  const { t, fails } = how;
+  const { fails, count } = how;
+  if (count) { t.plan(count); }
   if (fails) {
-    return (t || eq).throws(() => cmp({ ...how, fails: false }), fails);
+    return (t || eq).throws(() => cmp(t, { ...how, fails: false }), fails);
   }
 
   let y = yamlify;
@@ -20,7 +22,8 @@ function cmp(how, guess) {
   const actual = y(how.input);
   let { want } = how;
   if (Array.isArray(want)) { want = [...want, '']; }
-  eq.lines(actual, want);
+
+  eq.named.lines(shortTrace(), actual, want);
   if (t) { t.equal(0, 0); }
 }
 

@@ -1,8 +1,11 @@
 // -*- coding: utf-8, tab-width: 2 -*-
 
-import test from './util/cmpTest.mjs';
+import test from 'p-tape';
 
-test('trPrim: doge', (cmp) => {
+import cmp from './util/cmp.mjs';
+
+test('trPrim: doge', (t) => {
+  t.plan(5);
   const input = {
     wow: true,
     such: false,
@@ -19,63 +22,63 @@ test('trPrim: doge', (cmp) => {
   };
 
   let opt = { undef: 'ø' };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     'wow: yes',
     'such: no',
     // so: omitted
     'very:',
-    '  - "undefined"',
+    "  - 'undefined'",
     '  - ø',
-    '  - "null"',
+    "  - 'null'",
     '  - null',
     'much: 3',
     'many: 5',
-    'amaze: "excite"',
+    "amaze: 'excite'",
   ]);
 
   opt = { undef: 'ø', trPrim: { undefined: '¿?¿' } };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     'wow: true',
     'such: false',
     // so: omitted
     'very:',
-    '  - "undefined"',
+    "  - 'undefined'",
     '  - ¿?¿',
-    '  - "null"',
+    "  - 'null'",
     '  - null',
     'much: 3',
     'many: 5',
-    'amaze: "excite"',
+    "amaze: 'excite'",
   ]);
 
   opt = { trPrim: { undefined: '¿?¿' } };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     'wow: true',
     'such: false',
     // so: omitted
     'very:',
-    '  - "undefined"',
+    "  - 'undefined'",
     '  - ¿?¿',
-    '  - "null"',
+    "  - 'null'",
     '  - null',
     'much: 3',
     'many: 5',
-    'amaze: "excite"',
+    "amaze: 'excite'",
   ]);
 
   opt = { dictUndef: 'NULL', trPrim: { undefined: '¿?¿' } };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     'wow: true',
     'such: false',
     'so: NULL',
     'very:',
-    '  - "undefined"',
+    "  - 'undefined'",
     '  - ¿?¿',
-    '  - "null"',
+    "  - 'null'",
     '  - null',
     'much: 3',
     'many: 5',
-    'amaze: "excite"',
+    "amaze: 'excite'",
   ]);
 
   delete opt.dictUndef;
@@ -90,7 +93,7 @@ test('trPrim: doge', (cmp) => {
     '3': '∗∗∗··',
     '5': '∗∗∗∗∗',
   };
-  cmp({ input, opt }, [
+  cmp(t, { input, opt }, [
     'wow: yeah',
     'such: nope',
     'very:',
@@ -102,4 +105,4 @@ test('trPrim: doge', (cmp) => {
     'many: ∗∗∗∗∗',
     'amaze: !!!',
   ]);
-}, 5);
+});

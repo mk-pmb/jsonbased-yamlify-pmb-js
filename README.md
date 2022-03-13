@@ -40,6 +40,10 @@ Return a potentially-customized version of the `yamlify` function.
   The default is to map Booleans to `yes` and `no`.
   (¹ For convenience, in addition to valid JSON as keys, you may specify
   a key named `undefined` to override the `undef` option.)
+* `strQuotMark`:
+  Preferred quotation character for strings whose JSON representation
+  contains neither this string nor a backslash.
+  Default: `"'"` (U+0027 apostrophe)
 
 
 
