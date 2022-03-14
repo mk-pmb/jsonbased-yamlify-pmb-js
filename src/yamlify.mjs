@@ -55,9 +55,11 @@ function makeRequoter(q) {
 function finalSpaceAdjustments(x) {
   let y = x;
   y = y.replace(/ $/mg, '');
-  y = y.replace(/\r\n\s+(?=\-)/g, '   ');
-  y = y.replace(/\r\n\s+(?=\S)/g, ' ');
+  y = y.replace(/\s*(?:\r¶\n)+\n*/g, '\n\n');
+  y = y.replace(/(?:\r<list>\n)+\s+(?=\-)/g, '   ');
+  y = y.replace(/(?:\r<list>\n)+\s+(?=\S)/g, ' ');
   y = y.replace(/\r/g, '«');
+  y = y.replace(/\s+$/, '\n');
   return y;
 }
 
@@ -92,7 +94,9 @@ EX.cfg = function cfg(opt) {
     if (!list.length) { return '[]\n'; }
     const bul = ind + '  - ';
     const sub = ind + '    ';
-    return (brk || '') + list.map(x => bul + f(x, sub, '\r\n')).join('');
+    return ((brk || '')
+      + list.map(x => bul + f(x, sub, '\r<list>\n')).join('')
+      + '\r¶\n');
   };
 
   function dictItem(k, v, ind) {
@@ -111,7 +115,7 @@ EX.cfg = function cfg(opt) {
     function each([k, v]) { return dictItem(k, v, ind); }
     const ent = Object.entries(x).map(each).filter(Boolean);
     if (!ent.length) { return '{}\n'; }
-    return (brk || '') + ent.join('');
+    return (brk || '') + ent.join('') + '\r¶\n';
   };
 
   function yamlify(x) { return finalSpaceAdjustments(f(x, '')); }
