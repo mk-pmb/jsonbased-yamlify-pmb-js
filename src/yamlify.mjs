@@ -10,6 +10,32 @@ const dictKeyRgx = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 function isObj(x) { return (x && typeof x) === 'object'; }
 
+function linesArray(a) { return Object.assign(a, linesArray.api); }
+linesArray.api = {
+  toString() { return this.join('\n') + '\n'; },
+};
+
+let vaniCache;
+const EX = function vanillaYamlify(x) {
+  if (!vaniCache) { vaniCache = EX.cfg(); }
+  return vaniCache(x);
+};
+
+EX.util = {
+  linesArray,
+  defaultHeaderLines: linesArray([
+    '%YAML 1.1',
+    "# ^-- Some parsers don't accept v1.2 yet, e.g. GitLab CI.",
+    '# -*- coding: UTF-8, tab-width: 4 -*-',
+    '---',
+    '',
+  ]),
+  defaultFooterLines: linesArray([
+    '',
+    '...',
+  ]),
+};
+
 function cannotUndef() {
   throw new TypeError('Cannot yamlify undefined as a primitive value.');
 }
@@ -26,7 +52,16 @@ function makeRequoter(q) {
   return requote;
 }
 
-function cfg(opt) {
+function finalSpaceAdjustments(x) {
+  let y = x;
+  y = y.replace(/ $/mg, '');
+  y = y.replace(/\r\n\s+(?=\-)/g, '   ');
+  y = y.replace(/\r\n\s+(?=\S)/g, ' ');
+  y = y.replace(/\r/g, '«');
+  return y;
+}
+
+EX.cfg = function cfg(opt) {
   if (!opt) { return cfg(true); }
   const {
     dictUndef,
@@ -79,21 +114,12 @@ function cfg(opt) {
     return (brk || '') + ent.join('');
   };
 
-  return Object.assign(function yamlify(x) {
-    let y = f(x, '').replace(/ $/mg, '');
-    y = y.replace(/\r\n\s+(?=\-)/g, '   ');
-    y = y.replace(/\r\n\s+(?=\S)/g, ' ');
-    y = y.replace(/\r/g, '«');
-    return y;
-  }, {
-    cfg: function customize(upd) { return cfg({ ...opt, ...upd }); },
+  function yamlify(x) { return finalSpaceAdjustments(f(x, '')); }
+  return Object.assign(yamlify, {
+    ...EX,
+    cfg: function customize(upd) { return EX.cfg({ ...opt, ...upd }); },
   });
-}
+};
 
-let vaniCache;
-export default Object.assign(function vanillaYamlify(x) {
-  if (!vaniCache) { vaniCache = cfg(); }
-  return vaniCache(x);
-}, {
-  cfg,
-});
+
+export default EX;
