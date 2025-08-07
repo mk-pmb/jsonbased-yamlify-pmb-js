@@ -58,4 +58,6 @@ chk('Ambiguous indentation',
 
 
 
-console.info('+OK stringBasics test passed.');
+
+
+// *scroll*
