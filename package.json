@@ -1,5 +1,5 @@
 { "name": "jsonbased-yamlify-pmb",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A simple, feature-incomplete YAML writer",
   "keywords": ["yaml"],
 
@@ -17,27 +17,26 @@
   "private": false, "license": "ISC",
 
   "main": "src/yamlify.mjs",
-  "scripts": { "test": "elp && nodemjs test/all.mjs" },
+  "scripts": { "test": "elp && nodejs test/all.mjs" },
   "directories": { "test": "test" },
   "eslintConfig": { "extends": "nodejs-pmb" },
 
   "dependencies": {
-    "getown": "^1.0.1",
+    "getown": "^1.0.2",
     "univeil": "^0.1.19"
   },
   "devDependencies": {
-    "equal-pmb": "^0.1.29",
-    "eslint-config-nodejs-pmb": "^0.3.9",
+    "equal-pmb": "^0.1.30",
+    "eslint-config-nodejs-pmb": "^0.3.14",
     "eslint-plugin-json-light-pmb": "^1.0.7",
-    "eslint-plugin-n": "^17.16.2",
+    "eslint-plugin-n": "^17.24.0",
     "eslint-pretty-pmb": "^1.0.7",
-    "nodemjs": "^0.1.16",
-    "p-fatal": "^0.1.5",
+    "p-fatal": "^0.1.7",
     "p-tape": "^4.0.2",
-    "safeload-yaml-pmb": "^4.210519.0",
+    "safeload-yaml-pmb": "^4.210519.1",
     "usnam-pmb": "^0.2.5"
   },
 
 
-  "engines": { "npm": ">=7.0.0", "node": ">=16.0.0" }
+  "engines": { "npm": ">=7.0.0", "node": ">=24.0.0" }
 }

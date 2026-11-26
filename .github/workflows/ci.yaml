@@ -19,13 +19,11 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - '8.x'
-          - '12.x'
-          - '16.x'
-          - '20.x'
+          - 20
+          - 24
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: mk-pmb/github-ci-util-2405-pmb/act/install@experimental
         with:
           nodejs_version: ${{ matrix.node-version }}
@@ -35,6 +33,7 @@ jobs:
           ln --symbolic --no-target-directory -- ..
           node_modules/equal-pmb || true
       - run: ghciu npm test
+      - run: ghciu -Q ghciu://util/nodejs/ci_audit.sh
 
 
 ...
