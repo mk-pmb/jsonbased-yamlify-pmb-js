@@ -5,8 +5,9 @@ import getOwn from 'getown';
 
 const { jsonify } = univeil;
 
-const yesNoBools = { 'true': 'yes', 'false': 'no' };
+const dictExtraIndent = '    ';
 const dictKeyRgx = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const yesNoBools = { 'true': 'yes', 'false': 'no' };
 
 function isObj(x) { return (x && typeof x) === 'object'; }
 
@@ -101,14 +102,19 @@ EX.cfg = function cfg(opt) {
 
   function dictItem(k, v, ind) {
     const m = dictKeyRgx.exec(k);
-    const t = ind + ((m && (m[0] === k)) ? k : requote(jsonify(k))) + ': ';
+    const q = ((m && (m[0] === k)) ? k : requote(jsonify(k)));
+    const t = ind + q + ': ';
     if (v === undefined) {
       if (dictUndef === undefined) { return ''; }
       return t + dictUndef + '\n';
     }
     if (!isObj(v)) { return t + f.prim(v); }
-    if (Array.isArray(v)) { return t + f.list('\n', ind, v); }
-    return t + f.dict('\n', ind + '    ', v);
+    const a = Array.isArray(v);
+    const b = (a ? f.list('\n', ind, v)
+      : f.dict('\n', ind + dictExtraIndent, v));
+    if (b.length < 5) { return t + b; }
+    return t + b.replace(/([\r\n¶]*)$/,
+      '\n' + ind + (a ? '  # [^] ' : dictExtraIndent + '# {^} ') + q + '$1');
   }
 
   f.dict = function dict(brk, ind, x) {
